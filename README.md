@@ -9,5 +9,4 @@ This bot has 4 features:
 
 Each function has its own button.
 
-<img width="498" alt="Снимок экрана 2022-04-08 в 20 38 28" src="https://user-images.githubusercontent.com/78733510/162493670-f748ee4d-ec1c-471b-8341-65c04296a646.png">
-<img width="496" alt="Снимок экрана 2022-04-08 в 20 39 09" src="https://user-images.githubusercontent.com/78733510/162493693-fe8b2e46-d487-48e4-938a-09652752639b.png">
+<img width="498" alt="Снимок экрана 2022-04-08 в 20 38 28" src="https://user-images.githubusercontent.com/78733510/162493670-f748ee4d-ec1c-471b-8341-65c04296a646.png"><img width="496" alt="Снимок экрана 2022-04-08 в 20 39 09" src="https://user-images.githubusercontent.com/78733510/162493693-fe8b2e46-d487-48e4-938a-09652752639b.png">
