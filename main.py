@@ -6,7 +6,7 @@ from tg_info import info
 from bs4 import BeautifulSoup
 
 weather_token = "6e8d79779a0c362f14c60a1c7f363e29"
-API_TOKEN = "5158040057:AAEtt8ByoaJdYMy09MpupqpNAxiCAQnGj-0"
+API_TOKEN = "..."
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
