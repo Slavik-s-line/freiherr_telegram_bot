@@ -14,7 +14,7 @@ This bot has 4 features:
 
 ## Get started
 - clone this repository<br>
-```git clone ```
+```git clone https://github.com/Slavik-s-line/freiherr_telegram_bot.git```
 - install libraries<br>
 ```pip install -r requirements.txt```
 - run project<br>
