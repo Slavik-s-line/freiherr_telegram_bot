@@ -2,7 +2,6 @@ import logging
 import requests
 import datetime
 from aiogram import Bot, Dispatcher, executor, types
-from tg_info import info
 from bs4 import BeautifulSoup
 
 weather_token = "6e8d79779a0c362f14c60a1c7f363e29"
@@ -24,7 +23,7 @@ async def send_welcome(message: types.Message):
     await message.reply("Привіт!\n")
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     buttons_row1 = ["Погода\U0001F30D", "Курс UAH\U0001F3E6"]
-    buttons_row2 = ["Covid-19\U0001f9a0", "Офіційні джерела\U00002139"]
+    buttons_row2 = ["Covid-19\U0001f9a0", "Веб-сайт\U0001F310"]
     keyboard.add(*buttons_row1)
     keyboard.add(*buttons_row2)
     await message.answer("Обери одну з функцій внизу: ", reply_markup=keyboard)
@@ -63,8 +62,7 @@ async def name_city(message: types.Message):
     buy = soup.find_all('td', class_='mfm-text-nowrap')
     sell = soup.find_all('td', class_='mfm-text-nowrap')
     await message.reply(f"\U0001F4B5 USD:\n НБУ: {nby[0].text[1:8]} Купівля: {buy[1].text[1:8]} Продаж:{sell[1].text[14:20]}\n\n"
-                        f"\U0001F4B6 EUR:\n НБУ: {nby[1].text[1:8]} Купівля: {buy[3].text[1:8]} Продаж:{sell[3].text[14:20]}\n\n"
-                        f"\U000020BD RUB:\n НБУ: {nby[2].text[1:8]} Купівля: {buy[5].text[1:7]} Продаж:{sell[5].text[13:19]}")
+                        f"\U0001F4B6 EUR:\n НБУ: {nby[1].text[1:8]} Купівля: {buy[3].text[1:8]} Продаж:{sell[3].text[14:20]}\n\n")
 
 
 @dp.message_handler(lambda message: message.text == "Covid-19\U0001f9a0")
@@ -80,9 +78,9 @@ async def name_city(message: types.Message):
                         f"\U0001f494Померли: {info[4].text}\n")
 
 
-@dp.message_handler(lambda message: message.text == "Офіційні джерела\U00002139")
+@dp.message_handler(lambda message: message.text == "Веб-сайт\U0001F310")
 async def name_city(message: types.Message):
-    await message.reply(info)
+    await message.reply("Веб-сайт ще у розробці!")
 
 
 if __name__ == '__main__':
