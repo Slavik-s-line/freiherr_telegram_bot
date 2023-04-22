@@ -3,9 +3,10 @@ import requests
 import datetime
 from aiogram import Bot, Dispatcher, executor, types
 from bs4 import BeautifulSoup
+import os
 
-weather_token = "6e8d79779a0c362f14c60a1c7f363e29"
-API_TOKEN = "..."
+weather_token = os.environ['OPENWEATHER_TOKEN']
+API_TOKEN = os.environ['TG_API_TOKEN_FREIHERR']
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -33,9 +34,7 @@ async def send_welcome(message: types.Message):
 async def name_city(message: types.Message):
     await message.reply("Введіть назву міста: ")
 
-    @dp.message_handler(lambda message: message.text != "Курс UAH\U0001F3E6"
-                                        and message.text != "Covid-19\U0001f9a0"
-                                        and message.text != "Офіційні джерела\U00002139")
+    @dp.message_handler(lambda message: message.text not in ["Погода\U0001F30D", "Курс UAH\U0001F3E6", "Covid-19\U0001f9a0", "Веб-сайт\U0001F310"])
     async def without_puree(message: types.Message):
         try:
             r1 = requests.get(
@@ -55,14 +54,13 @@ async def name_city(message: types.Message):
 
 @dp.message_handler(lambda message: message.text == "Курс UAH\U0001F3E6")
 async def name_city(message: types.Message):
-    url = 'https://minfin.com.ua/ua/currency/'
+    url = 'https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=5'
     response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'lxml')
-    nby = soup.find_all('span', class_='mfcur-nbu-full-wrap')
-    buy = soup.find_all('td', class_='mfm-text-nowrap')
-    sell = soup.find_all('td', class_='mfm-text-nowrap')
-    await message.reply(f"\U0001F4B5 USD:\n НБУ: {nby[0].text[1:8]} Купівля: {buy[1].text[1:8]} Продаж:{sell[1].text[14:20]}\n\n"
-                        f"\U0001F4B6 EUR:\n НБУ: {nby[1].text[1:8]} Купівля: {buy[3].text[1:8]} Продаж:{sell[3].text[14:20]}\n\n")
+    data = response.json()
+    await message.reply(f"\U0001F4B5 USD:\nКупівля: {round(float(data[1]['buy']), 2)}\n"
+                        f"Продаж:{round(float(data[1]['sale']), 2)}\n\n"
+                        f"\U0001F4B6 EUR:\nКупівля: {round(float(data[0]['buy']), 2)}\n"
+                        f"Продаж:{round(float(data[0]['sale']), 2)}\n\n")
 
 
 @dp.message_handler(lambda message: message.text == "Covid-19\U0001f9a0")
@@ -80,7 +78,7 @@ async def name_city(message: types.Message):
 
 @dp.message_handler(lambda message: message.text == "Веб-сайт\U0001F310")
 async def name_city(message: types.Message):
-    await message.reply("Веб-сайт ще у розробці!")
+    await message.reply("164.92.165.232")
 
 
 if __name__ == '__main__':
