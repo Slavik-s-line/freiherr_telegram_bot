@@ -15,6 +15,9 @@ logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
+def get_date(timezone):
+    tz = datetime.timezone(datetime.timedelta(seconds=int(timezone)))
+    return datetime.datetime.now(tz = tz).strftime("%m/%d/%Y, %H:%M:%S")
 
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):
@@ -44,10 +47,14 @@ async def name_city(message: types.Message):
             temperature = round(data["main"]["temp"])
             humidity = round(data["main"]["humidity"])
             wind = round(data["wind"]["speed"])
+            pressure = round(data["main"]["pressure"])
             await message.reply(f"***{datetime.datetime.now().strftime('%b %d %Y %H:%M')}***\n"
-                                f"Погода в місті: {city}\n\U0001F321Температура: {temperature} C°\n"
+                                f"Погода в місті: {city}\n"
+                                f"\U0001F321Температура: {temperature} C°\n"
                                 f"\U0001F4A7Вологість повітря: {humidity} %\n"
-                                f"\U0001F32AВітер: {wind} м/с\n ")
+                                f"\U0001F32AВітер: {wind} м/с\n"
+                                f"\U0001F975Тиск: {pressure}  Па\n"
+                                f"Місцевий час: {get_date(data['timezone'])}")
         except:
             await message.reply("\U0001F3D9 Провірте назву міста \U0001F3D9")
 
