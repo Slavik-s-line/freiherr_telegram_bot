@@ -27,7 +27,7 @@ async def send_welcome(message: types.Message):
     await message.reply("Привіт!\n")
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     buttons_row1 = ["Погода\U0001F30D", "Курс UAH\U0001F3E6"]
-    buttons_row2 = ["Covid-19\U0001f9a0", "Веб-сайт\U0001F310"]
+    buttons_row2 = ["Втрати росії у війні🚷", "Веб-сайт\U0001F310"]
     keyboard.add(*buttons_row1)
     keyboard.add(*buttons_row2)
     await message.answer("Обери одну з функцій внизу: ", reply_markup=keyboard)
@@ -69,17 +69,57 @@ async def name_city(message: types.Message):
                         f"Продаж:{round(float(data[0]['sale']), 2)}\n\n")
 
 
-@dp.message_handler(lambda message: message.text == "Covid-19\U0001f9a0")
+@dp.message_handler(lambda message: message.text == "Втрати росії у війні🚷")
 async def name_city(message: types.Message):
-    url = 'https://index.minfin.com.ua/ua/reference/coronavirus/geography/'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'lxml')
-    info = soup.find_all('td', class_='bg-total')
-    await message.reply(f"Статистака Covid-19 у світі на сьогодні: "
-                        f"{datetime.datetime.now().strftime('%b %d %Y %H:%M')}\n\n"
-                        f"\U0001f637Захворіли: {info[2].text}\n"
-                        f"\U0001f600Одужали: {info[6].text}\n"
-                        f"\U0001f494Померли: {info[4].text}\n")
+    # main stats
+    url = 'https://russianwarship.rip/api/v2/statistics/latest'
+    response = requests.get(url).json()
+    date = response["data"]["date"]
+    day = response["data"]["day"]
+    personnel_units = response["data"]["stats"]["personnel_units"]
+    tanks = response["data"]["stats"]["tanks"]
+    armoured_fighting_vehicles = response["data"]["stats"]["armoured_fighting_vehicles"]
+    artillery_systems = response["data"]["stats"]["artillery_systems"]
+    mlrs = response["data"]["stats"]["mlrs"]
+    aa_warfare_systems = response["data"]["stats"]["aa_warfare_systems"]
+    planes = response["data"]["stats"]["planes"]
+    helicopters = response["data"]["stats"]["helicopters"]
+    vehicles_fuel_tanks = response["data"]["stats"]["vehicles_fuel_tanks"]
+    warships_cutters = response["data"]["stats"]["warships_cutters"]
+    cruise_missiles = response["data"]["stats"]["cruise_missiles"]
+    uav_systems = response["data"]["stats"]["uav_systems"]
+    special_military_equip = response["data"]["stats"]["special_military_equip"]
+
+    # increase by last day
+    day_personnel_units = response["data"]["increase"]["personnel_units"]
+    day_tanks = response["data"]["increase"]["tanks"]
+    day_armoured_fighting_vehicles = response["data"]["increase"]["armoured_fighting_vehicles"]
+    day_artillery_systems = response["data"]["increase"]["artillery_systems"]
+    day_mlrs = response["data"]["increase"]["mlrs"]
+    day_aa_warfare_systems = response["data"]["increase"]["aa_warfare_systems"]
+    day_planes = response["data"]["increase"]["planes"]
+    day_helicopters = response["data"]["increase"]["helicopters"]
+    day_vehicles_fuel_tanks = response["data"]["increase"]["vehicles_fuel_tanks"]
+    day_warships_cutters = response["data"]["increase"]["warships_cutters"]
+    day_cruise_missiles = response["data"]["increase"]["cruise_missiles"]
+    day_uav_systems = response["data"]["increase"]["uav_systems"]
+    day_special_military_equip = response["data"]["increase"]["special_military_equip"]
+
+    await message.reply(f"*День війни №* {day}\n\n"
+                        f"*Знищено:*\n\n"
+                        f"🪖*Особового складу:* {personnel_units}(+{day_personnel_units})\n"
+                        f"🚜*Танків:* {tanks}(+{day_tanks})\n"
+                        f"🛡️*Бойових броньованих машин:* {armoured_fighting_vehicles}(+{day_armoured_fighting_vehicles})\n"
+                        f"🎯*Артилерійських систем:* {artillery_systems}(+{day_artillery_systems})\n"
+                        f"🏹*РСЗВ:* {mlrs}(+{day_mlrs})\n"
+                        f"📡*Засобів ППО:* {aa_warfare_systems}(+{day_aa_warfare_systems})\n"
+                        f"🛩️*Літаків:* {planes}(+{day_planes})\n"
+                        f"🚁*Гелікоптерів:* {helicopters}(+{day_helicopters})\n"
+                        f"🚚*Автомобільної техніки та цистерн з ПММ:* {vehicles_fuel_tanks}(+{day_vehicles_fuel_tanks})\n"
+                        f"🚤*Кораблів/катерів:* {warships_cutters}(+{day_warships_cutters})\n"
+                        f"🚀*Крилатих ракет:* {cruise_missiles}(+{day_cruise_missiles})\n"
+                        f"🛸*БПЛА:* {uav_systems}(+{day_uav_systems})\n"
+                        f"🦽*Спеціальної техніки:* {special_military_equip}(+{day_special_military_equip})", parse_mode= 'Markdown')
 
 
 @dp.message_handler(lambda message: message.text == "Веб-сайт\U0001F310")
