@@ -74,7 +74,14 @@ async def name_city(message: types.Message):
     # main stats
     url = 'https://russianwarship.rip/api/v2/statistics/latest'
     response = requests.get(url).json()
-    date = response["data"]["date"]
+    war_status = response["data"]["war_status"]["code"]
+    match int(war_status):
+        case 1:
+            war_status_alias = '♻️активний'
+        case 2:
+            war_status_alias = '🤝перемир`я' 
+        case 3:
+            war_status_alias = '🇺🇦Перемога України'     
     day = response["data"]["day"]
     personnel_units = response["data"]["stats"]["personnel_units"]
     tanks = response["data"]["stats"]["tanks"]
@@ -106,6 +113,7 @@ async def name_city(message: types.Message):
     day_special_military_equip = response["data"]["increase"]["special_military_equip"]
 
     await message.reply(f"*День війни №* {day}\n\n"
+                        f"*Статус війни:* {war_status_alias}\n\n"
                         f"*Знищено:*\n\n"
                         f"🪖*Особового складу:* {personnel_units}(+{day_personnel_units})\n"
                         f"🚜*Танків:* {tanks}(+{day_tanks})\n"
