@@ -132,7 +132,7 @@ async def name_city(message: types.Message):
 
 @dp.message_handler(lambda message: message.text == "Веб-сайт\U0001F310")
 async def name_city(message: types.Message):
-    await message.reply("164.92.165.232")
+    await message.reply("🌐Відвідайте наш вебсайт🌐\nhttps://www.freiherr.club")
 
 
 if __name__ == '__main__':
