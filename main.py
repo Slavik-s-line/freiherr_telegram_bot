@@ -2,7 +2,6 @@ import logging
 import requests
 import datetime
 from aiogram import Bot, Dispatcher, executor, types
-from bs4 import BeautifulSoup
 import os
 
 weather_token = os.environ['OPENWEATHER_TOKEN']
@@ -17,7 +16,7 @@ dp = Dispatcher(bot)
 
 def get_date(timezone):
     tz = datetime.timezone(datetime.timedelta(seconds=int(timezone)))
-    return datetime.datetime.now(tz = tz).strftime('%b %d %Y %H:%M')
+    return datetime.datetime.now(tz = tz).strftime("%d.%m.%Y %H:%M")
 
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):
@@ -27,9 +26,11 @@ async def send_welcome(message: types.Message):
     await message.reply("Привіт!\n")
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     buttons_row1 = ["Погода\U0001F30D", "Курс UAH\U0001F3E6"]
-    buttons_row2 = ["Втрати росії у війні🚷", "Веб-сайт\U0001F310"]
+    buttons_row2 = ["Ціни на пальне WOG ⛽", "Веб-сайт\U0001F310"]
+    buttons_row3 = ["Втрати росії у війні🚷"]
     keyboard.add(*buttons_row1)
     keyboard.add(*buttons_row2)
+    keyboard.add(*buttons_row3)
     await message.answer("Обери одну з функцій внизу: ", reply_markup=keyboard)
 
 
@@ -37,7 +38,7 @@ async def send_welcome(message: types.Message):
 async def name_city(message: types.Message):
     await message.reply("Введіть назву міста: ")
 
-    @dp.message_handler(lambda message: message.text not in ["Погода\U0001F30D", "Курс UAH\U0001F3E6", "Covid-19\U0001f9a0", "Веб-сайт\U0001F310"])
+    @dp.message_handler(lambda message: message.text not in ["Погода\U0001F30D", "Курс UAH\U0001F3E6", "Втрати росії у війні🚷", "Веб-сайт\U0001F310", "Ціни на пальне⛽"])
     async def without_puree(message: types.Message):
         try:
             r1 = requests.get(
@@ -134,6 +135,24 @@ async def name_city(message: types.Message):
 async def name_city(message: types.Message):
     await message.reply("🌐Відвідайте наш вебсайт🌐\nhttps://www.freiherr.club")
 
+@dp.message_handler(lambda message: message.text == "Ціни на пальне WOG ⛽")
+async def without_puree(message: types.Message):
+    r1 = requests.get("https://api.wog.ua/fuel_stations/813")
+    data = r1.json()
+    fuel_info = data["data"]["fuels"]
+    schedule_info = data["data"]["schedule"][0]["interval"]
+    answer_msg = ''
+
+    for info in fuel_info:
+        name = info["name"]
+        brand = info["brand"] if "brand" in info else ""
+        price = info["price"] / 100
+        answer_msg += f"▫️ {name} {brand} *{price}*\n"
+
+    await message.answer(f"*Ціни на пальне WOG ⛽* \n\n"
+                        f"{answer_msg}\n\n"
+                        f"ℹ️*Додаткова інформація:*\n\n"
+                        f"Графік роботи: {schedule_info}", parse_mode='Markdown')
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
