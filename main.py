@@ -25,7 +25,7 @@ async def send_welcome(message: types.Message):
     """
     await message.reply("Привіт!\n")
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    buttons_row1 = ["Погода\U0001F30D", "Курс UAH\U0001F3E6"]
+    buttons_row1 = ["Погода\U0001F30D", "Обмін PrivatBank\U0001F3E6"]
     buttons_row2 = ["Ціни на пальне WOG ⛽", "Веб-сайт\U0001F310"]
     buttons_row3 = ["Втрати росії у війні🚷"]
     keyboard.add(*buttons_row1)
@@ -38,7 +38,7 @@ async def send_welcome(message: types.Message):
 async def name_city(message: types.Message):
     await message.reply("Введіть назву міста: ")
 
-    @dp.message_handler(lambda message: message.text not in ["Погода\U0001F30D", "Курс UAH\U0001F3E6", "Втрати росії у війні🚷", "Веб-сайт\U0001F310", "Ціни на пальне⛽"])
+    @dp.message_handler(lambda message: message.text not in ["Погода\U0001F30D", "Обмін PrivatBank\U0001F3E6", "Втрати росії у війні🚷", "Веб-сайт\U0001F310", "Ціни на пальне⛽"])
     async def without_puree(message: types.Message):
         try:
             r1 = requests.get(
@@ -59,7 +59,7 @@ async def name_city(message: types.Message):
             await message.reply("\U0001F3D9 Провірте назву міста \U0001F3D9")
 
 
-@dp.message_handler(lambda message: message.text == "Курс UAH\U0001F3E6")
+@dp.message_handler(lambda message: message.text == "Обмін PrivatBank\U0001F3E6")
 async def name_city(message: types.Message):
     url = 'https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=5'
     response = requests.get(url)
